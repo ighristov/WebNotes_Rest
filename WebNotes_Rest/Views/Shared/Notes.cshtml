@@ -1,0 +1,272 @@
+﻿@{
+    ViewBag.Title = "WebNotes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+    <div style="padding: 10px">
+        <h2>
+            Web Notes
+        </h2>
+    </div>
+}
+<div style="padding: 20px">
+    <div id="divGrid" style="padding: 5px">
+    </div>
+    <hr />
+    <input id="btnNewNote" type="button" value="New Note" onclick='PrepareFields(this); return false;' />
+    <input id="btnEditNote" type="button" value="Edit Note" onclick='PrepareFields(this); return false;'
+        style="display: none" />
+    <input id="btnDeleteNote" type="button" value="Delete Note" onclick='DeleteNote(); return false;'
+        style="display: none" />
+    <p>
+        <span id="isValidInfo"></span>
+    </p>
+    <hr />
+    <div id="divDetails" style="display: none" class="main-content">
+        <h3>
+            Note details</h3>
+        <table id="tblDetails">
+            <tr>
+                <td>
+                    Id:
+                </td>
+                <td style="width: 50px">
+                    <input type="text" id="txtID" disabled="disabled" />
+                </td>
+                <td>
+                    Category:
+                </td>
+                <td style="width: 100px;">
+                    <select id="selCategory" class="k-input">
+                    </select>
+                </td>
+                <td>
+                    Time taken:
+                </td>
+                <td style="width: 250px">
+                    <input type="text" id="txtTimeStamp" readonly="readonly" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Title:
+                </td>
+                <td colspan="5">
+                    <input type="text" id="txtTitle" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Content:
+                </td>
+                <td colspan="5">
+                    <textarea id="txtContent" rows="10" cols="40" name="txtContent" class="k-input" required></textarea>
+                </td>
+            </tr>
+        </table>
+        <input type='button' id="btnSave" value='Save' onclick='SaveNote();return false;' />
+        <input type='button' id="btnCancel" value='Cancel' onclick='CancelSave();return false;' />
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(
+            new function () {
+                loadData();
+            });
+
+    function loadData() {
+        //Loading the notes in a kendoGrid
+        $("#divGrid").kendoGrid({
+            selectable: "row",
+            sortable: true,
+            columns: [
+                        { title: "№", field: "FID", width: "50px", attributes: { style: "text-align:right"} },
+                        { title: "Category", field: "CategoryName", width: "100px", attributes: { style: "text-align:center"} },
+                        { title: "Title", field: "FTITLE", width: "120px" },
+                        { title: "Content", field: "ContentShort" },
+                        { title: "TimeStamp", field: "FTIMESTAMP", width: "120px", template: '#= kendo.toString(new Date(FTIMESTAMP).toGMTString())#', attributes: { style: "text-align:center"} }
+                    ],
+
+            dataSource: new kendo.data.DataSource({
+                type: "json",
+                transport: { read: "api/Notes" }
+            }),
+            change: onChange
+        });
+
+        //Loading the categories in a kendoComboBox
+        $("#selCategory").kendoComboBox({
+            dataSource: new kendo.data.DataSource({ transport: { read: "api/categories"} }),
+            dataTextField: "FNAME",
+            dataValueField: "FID"
+        });
+    }
+
+
+
+    //OnChange of selected grid row the selected Note ID is saved in a grid attribute (data-selectedId) and the details are shown.
+    function onChange(e) {
+        var _grid = e.sender;
+        var _selectedDataItem = _grid.dataItem(this.select());
+        //the null check is because the onChange event raises once more with every rebinding (loadData) 
+        // and _selectedDataItem keeps track of every selected item. It's probably a bug.
+        if (_selectedDataItem != null) {
+            setSelectedID(_selectedDataItem.FID);
+            showNoteData(_selectedDataItem.FID);
+        }
+    }
+
+    function setSelectedID(id) {
+        $("#divGrid").attr("data-selectedId", id);
+    }
+
+    function getSelectedID() {
+        return $("#divGrid").attr("data-selectedID");
+    }
+
+    //Shows the selected note data in form fields.
+    function showNoteData(noteId) {
+        var params = { id: noteId };
+        var url = "/api/Notes/" + noteId.toString();
+        ShowDivDetails_if_Hidden($("#divGrid"));
+
+        //deserialize requested object.
+        $.ajax({
+            dataType: "json",
+            url: url,
+            data: params,
+            success: function (data) {
+                if (data != null) {
+                    $('#txtID').val(data.FID);
+                    $("#selCategory").data("kendoComboBox").value(data.FCATEGORY_ID);
+                    $('#txtTitle').val(data.FTITLE);
+                    $('#txtContent').val(data.FCONTENT);
+                    $('#txtTimeStamp').val(new Date(data.FTIMESTAMP).toGMTString());
+                }
+            }
+        });
+        $('#btnEditNote').show();
+        $('#btnDeleteNote').show();
+    }
+
+    //Validation before save - according to requirements, only Content field is mandatory. Title fields is optional
+    var validator = $("#divDetails").kendoValidator().data("kendoValidator");
+    $('#btnSave').on('click', function () {
+        return validator.validate();
+    });
+
+
+    //Saves note. For simplicity, it depends on the ID field if it will insert or update a note. If ID is null - insert. if ID is != null - update;
+    function SaveNote() {
+        try {
+            var _id = getSelectedID();
+            var _categoryID = $('#selCategory').val();
+            var _timeStamp = Date.parse($('#txtTimeStamp').val());
+            var _title = $('#txtTitle').val();
+            var _content = $('#txtContent').val();
+            var _reqType = (_id == null) ? 'POST' : 'PUT';
+            var _reqUrl = (_id == null) ? '/api/Notes' : '/api/Notes/' + _id.toString();
+            $.ajax({
+                type: _reqType,
+                url: _reqUrl,
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ FID: _id, FTimeStamp: _timeStamp, FCategory_ID: _categoryID, FTitle: _title, FContent: _content }),
+                success: function () {
+                    loadData();
+                    HideDivDetails();
+                    alert('Successfully saved.');
+                },
+                error: function (xhr) {
+                    ShowError(xhr);
+                }
+            });
+        }
+        catch (e) {
+            alert(e.name);
+        }
+    }
+
+    
+    //Deletes the selected note.
+    function DeleteNote() {
+        try {
+            var _id = getSelectedID();
+            if (_id == null) {
+                throw { name: "NullReferenceException", message: "The selectedID attribute is missing!" };
+            }
+            $.ajax({
+                type: 'DELETE',
+                url: '/api/Notes/' + _id.toString(),
+                contentType: 'application/json; charset=utf-8',
+                success: function () {
+                    loadData();
+                    HideDivDetails();
+                    alert('Successfully deleted.');
+                },
+                error: function (xhr) {
+                    ShowError(xhr);
+                }
+            });
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+
+    function ShowError(xmlHttpReq) {
+        alert("readyState: " + xmlHttpReq.readyState + "\r\nstatus: " + xmlHttpReq.status + "\r\nResponseText: " + xmlHttpReq.responseText);
+    }
+
+
+    //Shows divDetails, hiding the Save and Cancel buttons. 
+    //This mode is just to review the selected note, that's why editing is forbidden and Save and Cancel buttons are invisible.
+    function ShowDivDetails_if_Hidden(sender) {
+        //the "data-shown" attribute is used to show divDetails only once while browsing the notes.
+        var _attr = $('#divDetails').attr("data-shown");
+        if ((_attr == null) || (_attr == "false")) {
+            $('#divDetails').show(100);
+            $('#btnSave').hide();
+            $('#btnCancel').hide();
+            $('#divDetails').attr("data-shown", true);
+        }
+        //If sender is btnNewNote, there is no point to make the fields readonly. Otherwise they shouldn't be editable.
+        if ((sender == null) || (sender.id != "btnNewNote")) {
+            $("#selCategory").kendoComboBox({ enable: false });
+            //setting ReadOnly instead of Disable on text fields - let the user have the option to copy text from the fields.
+            $('#divDetails').find('input, textarea').attr('readonly', 'true');
+        }
+    }
+
+    //Hides divDetails, clearing the "shown" attribute;
+    function HideDivDetails() {
+        $('#divDetails').hide();
+        $('#divDetails').attr("data-shown", false);
+        $('#btnEditNote').hide(100);
+        $('#btnDeleteNote').hide(100);
+    }
+
+    function CancelSave() {
+        HideDivDetails();
+    }
+
+    //Prepares the fields for Edit or Insert a note.
+    function PrepareFields(sender) {
+        if (sender.id == "btnNewNote") {
+            setSelectedID(null); //the selected id attribute is an indicator if we're inserting or updating a note, 
+            ShowDivDetails_if_Hidden(sender);
+            $('#divDetails').find('input[type=text], textarea').val(null);
+            $('#txtID').val(null);
+
+        }
+        //remove disabled and read-only attributes from dropdownlist and textfields.
+        $("#selCategory").data("kendoComboBox").enable(true);
+        //the ID and TimeStamp field are disabled - the user is not allowed to change the Note ID or timestamp
+        $('#divDetails').find('input, textarea').not('#txtTimeStamp').removeAttr('readonly');
+        $('#btnSave').show();
+        $('#btnCancel').show();
+        var _timeStamp = new Date().getTime();
+        $('#txtTimeStamp').val(new Date(_timeStamp).toGMTString());
+        $('#selCategory').focus();
+    }
+        
+</script>

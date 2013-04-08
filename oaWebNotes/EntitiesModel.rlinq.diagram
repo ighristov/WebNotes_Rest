@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EntityDiagrams>
+  <entityDiagramsDiagram dslVersion="2.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="EntitiesModel" isDefault="true">
+    <DomainModelMoniker name="/emWebNotes" />
+    <nestedChildShapes>
+      <classShape Id="ecb03f11-1688-48c3-a6aa-3c68f7494306" absoluteBounds="1.875, 1.5, 1.875, 2.3396761067708334" fillColor="253, 184, 119" outlineColor="213, 71, 0">
+        <DomainClassMoniker name="/emWebNotes/Note" />
+        <nestedChildShapes>
+          <elementListCompartment Id="38e8de67-5443-44d6-ab0c-f7553b334cb1" absoluteBounds="1.89, 2.01, 1.8450000000000002, 1.2108968098958333" name="AttributesCompartment" titleTextColor="Black" itemTextColor="Black" />
+          <elementListCompartment Id="2f848c8f-5405-4435-bb0d-98366cca8505" absoluteBounds="1.89, 3.2308968098958335, 1.8450000000000002, 0.2493896484375" name="ImplementationsCompartment" titleTextColor="Black" itemTextColor="Black" />
+          <elementListCompartment Id="8d2bfc8d-cf52-4ac1-b42c-00a505d3df44" absoluteBounds="1.89, 3.4902864583333333, 1.8450000000000002, 0.2493896484375" name="NavigationCompartment" titleTextColor="Black" itemTextColor="Black" />
+        </nestedChildShapes>
+      </classShape>
+      <classShape Id="9640d97d-246e-443f-bda2-217dbabd7a31" absoluteBounds="5.125, 1, 1.5, 1.7627718098958334" fillColor="253, 184, 119" outlineColor="213, 71, 0">
+        <DomainClassMoniker name="/emWebNotes/Category" />
+        <nestedChildShapes>
+          <elementListCompartment Id="4eaf264e-83f0-43b7-b637-9bbc8b5c3e94" absoluteBounds="5.1400000000000006, 1.51, 1.4700000000000002, 0.63399251302083326" name="AttributesCompartment" titleTextColor="Black" itemTextColor="Black" />
+          <elementListCompartment Id="ceb8c1f3-51e4-4585-9332-3481cff796bf" absoluteBounds="5.1400000000000006, 2.1539925130208335, 1.4700000000000002, 0.2493896484375" name="ImplementationsCompartment" titleTextColor="Black" itemTextColor="Black" />
+          <elementListCompartment Id="e74b7972-8aa2-499f-8d63-328e4188c2de" absoluteBounds="5.1400000000000006, 2.4133821614583333, 1.4700000000000002, 0.2493896484375" name="NavigationCompartment" titleTextColor="Black" itemTextColor="Black" />
+        </nestedChildShapes>
+      </classShape>
+    </nestedChildShapes>
+  </entityDiagramsDiagram>
+  <entityDiagramsDiagram dslVersion="2.0.0.0" absoluteBounds="0, 0, 11, 8.5" diagramId="9122e8ec-f519-4469-976f-e7f9315f551a" name="Diagram2" isDefault="false">
+    <DomainModelMoniker name="/emWebNotes" />
+  </entityDiagramsDiagram>
+</EntityDiagrams>

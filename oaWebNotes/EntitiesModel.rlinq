@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DomainModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="2.0.0.0" name="emWebNotes" namespace="oaWebNotes" showPropertiesCompartment="true" xmlns="http://www.telerik.com/ORM">
+  <orm:orm name="emWebNotes" backend="mssql" xmlns:orm="http://tempuri.org/ORM">
+    <orm:namespace name="oaWebNotes" default="true">
+      <orm:class name="Note" uniqueId="8589646f-fd73-4ef5-9337-1f917272ce7f">
+        <orm:table name="Notes" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_fID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_fID" property="FID" behavior="readwrite" uniqueId="2fefa1f1-f6e0-49df-a047-79643edbdc37" type="System.Int32">
+          <orm:column name="FID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_fTITLE" property="FTITLE" behavior="readwrite" uniqueId="8be6e56e-2525-4193-8afd-1a00fa7e2269" type="System.String">
+          <orm:column name="FTITLE" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_fCONTENT" property="FCONTENT" behavior="readwrite" uniqueId="3e07ba8b-adac-427c-a4c7-c6b035a2f963" type="System.String">
+          <orm:column name="FCONTENT" sql-type="nvarchar(max)" nullable="true" length="0" scale="0" ado-type="UnicodeStringInfiniteLength" />
+        </orm:field>
+        <orm:field name="_fTIMESTAMP" property="FTIMESTAMP" behavior="readwrite" uniqueId="eecc5bd9-475f-4aa1-a6b7-325475485429" type="System.Nullable`1[[System.Int64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="FTIMESTAMP" sql-type="bigint" nullable="true" length="0" scale="0" ado-type="Int64" />
+        </orm:field>
+        <orm:field name="_fCATEGORY_ID" property="FCATEGORY_ID" behavior="readwrite" uniqueId="8a09ea57-268c-4149-adbe-df57a16a67cd" type="System.Int32">
+          <orm:column name="FCATEGORY_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Category" uniqueId="0f52e1cb-a6be-4cb3-b4a2-a76e710053a5">
+        <orm:table name="Categories" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_fID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_fID" property="FID" behavior="readwrite" uniqueId="063875e9-0ed0-4188-960a-fd83f41ebcee" type="System.Int32">
+          <orm:column nullable="false" primary-key="true" length="0" name="FID" scale="0" sql-type="int" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_fNAME" property="FNAME" behavior="readwrite" uniqueId="a396d310-6633-415e-a521-d852dc339f4c" type="System.String">
+          <orm:column nullable="true" length="40" name="FNAME" scale="0" sql-type="nvarchar" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+      </orm:class>
+    </orm:namespace>
+    <orm:schema schema="">
+      <orm:table name="Notes">
+        <orm:column name="FID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="FTITLE" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="FCONTENT" sql-type="nvarchar(max)" nullable="true" length="0" scale="0" ado-type="UnicodeStringInfiniteLength" />
+        <orm:column name="FTIMESTAMP" sql-type="bigint" nullable="true" length="0" scale="0" ado-type="Int64" />
+        <orm:column name="FCATEGORY_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+      </orm:table>
+      <orm:table name="Categories">
+        <orm:column nullable="false" primary-key="true" length="0" name="FID" scale="0" sql-type="int" backend-calculated="true" ado-type="Int32" />
+        <orm:column nullable="true" length="40" name="FNAME" scale="0" sql-type="nvarchar" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+    </orm:schema>
+    <orm:relational-naming-settings>
+      <orm:remove-camel-case>False</orm:remove-camel-case>
+      <orm:source-strategy>Property</orm:source-strategy>
+    </orm:relational-naming-settings>
+  </orm:orm>
+  <ModelSettings xmlns="">
+    <AppConfigConnectionPropertyName>WebNoteConnection</AppConfigConnectionPropertyName>
+    <AppConfigConnectionString>data source=win8pc;initial catalog=WebNote;user id=sa;password=123456</AppConfigConnectionString>
+    <InitialCatalog>WebNote</InitialCatalog>
+    <NamingSettings>
+      <ClassRules>
+        <RemovePrefix>F</RemovePrefix>
+        <CaseMode>PascalCase</CaseMode>
+        <PluralizationMode>Singularize</PluralizationMode>
+      </ClassRules>
+      <FieldRules>
+        <AddPrefix>_</AddPrefix>
+        <CaseMode>CamelCase</CaseMode>
+      </FieldRules>
+      <PropertyRules>
+        <CaseMode>PascalCase</CaseMode>
+      </PropertyRules>
+    </NamingSettings>
+    <CodeGenerationSettings>
+      <OutputProjectName>oaWebNotes</OutputProjectName>
+      <MappingDefinitionType>Attributes</MappingDefinitionType>
+    </CodeGenerationSettings>
+    <SchemaUpdateSettings />
+    <BackendConfigurationSettings>
+      <BackendConfiguration>
+        <Backend>MsSql</Backend>
+        <ProviderName>System.Data.SqlClient</ProviderName>
+      </BackendConfiguration>
+    </BackendConfigurationSettings>
+  </ModelSettings>
+  <Types>
+    <DomainClass Id="8589646f-fd73-4ef5-9337-1f917272ce7f" name="Note" namespace="oaWebNotes" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Backend" concurrencyMember="FTIMESTAMP" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="2fefa1f1-f6e0-49df-a047-79643edbdc37" name="FID" type="Int32" label="FID : Int32" kind="Persistent" identity="true" fieldName="_fID" />
+      <Property Id="3e07ba8b-adac-427c-a4c7-c6b035a2f963" name="FCONTENT" label="FCONTENT : String" kind="Persistent" fieldName="_fCONTENT" />
+      <Property Id="eecc5bd9-475f-4aa1-a6b7-325475485429" name="FTIMESTAMP" type="Int64" label="FTIMESTAMP : Int64" nullable="true" kind="Persistent" fieldName="_fTIMESTAMP" />
+      <Property Id="8be6e56e-2525-4193-8afd-1a00fa7e2269" name="FTITLE" label="FTITLE : String" kind="Persistent" fieldName="_fTITLE" />
+      <Property Id="8a09ea57-268c-4149-adbe-df57a16a67cd" name="FCATEGORY_ID" type="Int32" label="FCATEGORY_ID : Int32" kind="Persistent" fieldName="_fCATEGORY_ID" />
+    </DomainClass>
+    <DomainClass Id="0f52e1cb-a6be-4cb3-b4a2-a76e710053a5" name="Category" namespace="oaWebNotes" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="063875e9-0ed0-4188-960a-fd83f41ebcee" name="FID" type="Int32" label="FID : Int32" kind="Persistent" identity="true" fieldName="_fID" />
+      <Property Id="a396d310-6633-415e-a521-d852dc339f4c" name="FNAME" label="FNAME : String" kind="Persistent" fieldName="_fNAME" />
+    </DomainClass>
+  </Types>
+  <domainContext>
+    <domainModelHasDomainContext Id="b8aae35a-fb0f-4d91-a1b4-e943b6e6f7de">
+      <domainContainer name="emWebNotes" namespace="oaWebNotes" showPropertiesCompartment="true">
+        <entitySetProperty name="Notes" namespace="oaWebNotes" type="Note" label="Notes : IQueryable&lt;oaWebNotes.Note&gt;" />
+        <entitySetProperty name="Categories" namespace="oaWebNotes" type="Category" label="Categories : IQueryable&lt;oaWebNotes.Category&gt;" />
+      </domainContainer>
+    </domainModelHasDomainContext>
+  </domainContext>
+</DomainModel>
